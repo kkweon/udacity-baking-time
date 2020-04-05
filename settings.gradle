@@ -1,0 +1,2 @@
+rootProject.name='BakingTime'
+include ':app'
