@@ -2,17 +2,19 @@ package com.example.bakingtime.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class Ingredient {
     @SerializedName("quantity")
     @Expose
-    private long quantity;
+    private float quantity;
 
     @SerializedName("measure")
     @Expose
-    private String measure;
+    private IngredientMeasure measure;
 
     @SerializedName("ingredient")
     @Expose

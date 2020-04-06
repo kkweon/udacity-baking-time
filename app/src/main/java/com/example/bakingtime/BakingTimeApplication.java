@@ -3,5 +3,6 @@ package com.example.bakingtime;
 import android.app.Application;
 
 public class BakingTimeApplication extends Application {
-    public ApplicationComponent mApplicationComponent = DaggerApplicationComponent.create();
+    public ApplicationComponent mApplicationComponent =
+            DaggerApplicationComponent.builder().context(this).build();
 }

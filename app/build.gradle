@@ -1,54 +1,64 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+	compileSdkVersion 29
+	buildToolsVersion "29.0.3"
 
-    defaultConfig {
-        applicationId "com.example.bakingtime"
-        minSdkVersion 23
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+	compileOptions {
+		sourceCompatibility 1.8
+		targetCompatibility 1.8
+	}
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
+	defaultConfig {
+		applicationId "com.example.bakingtime"
+		minSdkVersion 23
+		targetSdkVersion 29
+		versionCode 1
+		versionName "1.0"
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+	}
 
-    viewBinding {
-        enabled = true
-    }
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
+
+	viewBinding {
+		enabled = true
+	}
 
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+	implementation 'androidx.appcompat:appcompat:1.1.0'
+	implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+	testImplementation 'junit:junit:4.13'
+	androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+	androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.google.dagger:dagger:2.27'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.27'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.27'
+	implementation 'com.google.dagger:dagger:2.27'
+	annotationProcessor 'com.google.dagger:dagger-compiler:2.27'
+	annotationProcessor 'com.google.dagger:dagger-android-processor:2.27'
 
-    implementation "androidx.room:room-runtime:2.2.5"
-    annotationProcessor "androidx.room:room-compiler:2.2.5"
-    testImplementation "androidx.room:room-testing:2.2.5"
+	implementation "androidx.room:room-runtime:2.2.5"
+	annotationProcessor "androidx.room:room-compiler:2.2.5"
+	testImplementation "androidx.room:room-testing:2.2.5"
 
-    implementation 'com.google.code.gson:gson:2.8.6'
+	implementation 'com.google.code.gson:gson:2.8.6'
 
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+	compileOnly 'org.projectlombok:lombok:1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.12'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+	testCompileOnly 'org.projectlombok:lombok:1.18.12'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+	implementation 'com.android.volley:volley:1.1.1'
+
+	implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+	implementation "io.reactivex.rxjava3:rxjava:3.0.0"
 }
