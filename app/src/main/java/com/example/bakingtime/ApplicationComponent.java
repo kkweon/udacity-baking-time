@@ -2,6 +2,7 @@ package com.example.bakingtime;
 
 import android.content.Context;
 import com.example.bakingtime.data.RecipeNetworkService;
+import com.example.bakingtime.detail.DetailActivity;
 import com.example.bakingtime.list.MainActivity;
 import dagger.BindsInstance;
 import dagger.Component;
@@ -14,6 +15,8 @@ public interface ApplicationComponent {
     RecipeNetworkService recipeNetworkService();
 
     void inject(MainActivity mainActivity);
+
+    void inject(DetailActivity detailActivity);
 
     @Component.Builder
     interface Builder {

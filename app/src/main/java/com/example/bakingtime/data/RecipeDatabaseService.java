@@ -31,7 +31,7 @@ public class RecipeDatabaseService {
         RecipeDatabase.databaseWriteExecutor.execute(() -> mDatabase.recipeDao().addRecipe(recipe));
     }
 
-    public LiveData<Recipe> getRecipeById(int recipeId) {
+    public LiveData<Recipe> getRecipeById(long recipeId) {
         return mDatabase.recipeDao().getRecipeById(recipeId);
     }
 }

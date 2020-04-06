@@ -1,5 +1,6 @@
 package com.example.bakingtime.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -10,11 +11,13 @@ import com.example.bakingtime.BakingTimeApplication;
 import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeDatabaseService;
 import com.example.bakingtime.databinding.ActivityMainBinding;
+import com.example.bakingtime.detail.DetailActivity;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements Observer<List<Recipe>> {
+public class MainActivity extends AppCompatActivity
+        implements Observer<List<Recipe>>, OnCardClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     @Inject RecipeDatabaseService mRecipeDatabaseService;
@@ -31,6 +34,18 @@ public class MainActivity extends AppCompatActivity implements Observer<List<Rec
     public void onChanged(List<Recipe> recipes) {
         mAdapter.setMRecipes(recipes);
         mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Go to the detail view activity. Called when the card view item is clicked.
+     *
+     * @param recipe
+     */
+    @Override
+    public void onClick(Recipe recipe) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRA_RECIPE_ID, recipe.getId());
+        startActivity(intent);
     }
 
     @Override
@@ -51,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements Observer<List<Rec
 
     private void initializeFields() {
         mRecipesViewModel = getRecipesViewModelProvider().get(RecipesViewModel.class);
-        mAdapter = new RecipeAdapter(null, this);
+        mAdapter = new RecipeAdapter(null, this, this);
 
         mActivityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
     }

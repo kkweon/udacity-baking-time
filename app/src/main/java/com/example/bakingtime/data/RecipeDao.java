@@ -23,5 +23,5 @@ public interface RecipeDao {
     void addRecipe(Recipe recipe);
 
     @Query("SELECT * from Recipe where id = :recipeId")
-    LiveData<Recipe> getRecipeById(int recipeId);
+    LiveData<Recipe> getRecipeById(long recipeId);
 }

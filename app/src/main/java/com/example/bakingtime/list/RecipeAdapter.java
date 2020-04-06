@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +23,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private static final String TAG = RecipeAdapter.class.getSimpleName();
     @Setter private List<Recipe> mRecipes;
     private Context mContext;
+    private OnCardClickListener mOnCardClickListener;
 
     @NonNull
     @Override
@@ -45,10 +47,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                             new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                    holder.rowRecipeListBinding.cardViewBackgroundImage
-                                            .setBackground(
-                                                    new BitmapDrawable(
-                                                            mContext.getResources(), bitmap));
+                                    holder.rowRecipeListBinding.cardViewContainer.setBackground(
+                                            new BitmapDrawable(mContext.getResources(), bitmap));
                                 }
 
                                 @Override
@@ -78,12 +78,24 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         return mRecipes == null ? 0 : mRecipes.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         RowRecipeListBinding rowRecipeListBinding;
 
         ViewHolder(RowRecipeListBinding rowRecipeListBinding) {
             super(rowRecipeListBinding.getRoot());
             this.rowRecipeListBinding = rowRecipeListBinding;
+
+            this.rowRecipeListBinding.cardViewContainer.setOnClickListener(this);
+        }
+
+        /**
+         * Called when a view has been clicked.
+         *
+         * @param v The view that was clicked.
+         */
+        @Override
+        public void onClick(View v) {
+            mOnCardClickListener.onClick(mRecipes.get(getAdapterPosition()));
         }
     }
 }
