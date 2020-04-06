@@ -1,24 +1,37 @@
 package com.example.bakingtime.list;
 
 import android.os.Bundle;
-import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.bakingtime.BakingTimeApplication;
 import com.example.bakingtime.data.Recipe;
-import com.example.bakingtime.data.RecipeNetworkService;
+import com.example.bakingtime.data.RecipeDatabaseService;
 import com.example.bakingtime.databinding.ActivityMainBinding;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.SingleObserver;
-import io.reactivex.rxjava3.disposables.Disposable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Observer<List<Recipe>> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    @Inject RecipeDatabaseService mRecipeDatabaseService;
     private ActivityMainBinding mActivityMainBinding;
+    private RecipesViewModel mRecipesViewModel;
+    private RecipeAdapter mAdapter;
 
-    @Inject RecipeNetworkService mRecipeNetworkService;
+    /**
+     * Called when the data is changed.
+     *
+     * @param recipes The new data
+     */
+    @Override
+    public void onChanged(List<Recipe> recipes) {
+        mAdapter.setMRecipes(recipes);
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,27 +39,45 @@ public class MainActivity extends AppCompatActivity {
 
         ((BakingTimeApplication) getApplicationContext()).mApplicationComponent.inject(this);
 
-        mActivityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        // initialize view model
+        initializeFields();
         setContentView(mActivityMainBinding.getRoot());
 
-        mActivityMainBinding.textViewHelloWorld.setText("Set from onCreate");
+        mRecipesViewModel.getRecipes().observe(this, this);
+        mActivityMainBinding.recyclerViewRecipeContainer.setLayoutManager(
+                new LinearLayoutManager(this));
+        mActivityMainBinding.recyclerViewRecipeContainer.setAdapter(mAdapter);
+    }
 
-        this.mRecipeNetworkService
-                .getRecipes()
-                .subscribe(
-                        new SingleObserver<List<Recipe>>() {
-                            @Override
-                            public void onSubscribe(@NonNull Disposable d) {}
+    private void initializeFields() {
+        mRecipesViewModel = getRecipesViewModelProvider().get(RecipesViewModel.class);
+        mAdapter = new RecipeAdapter(null, this);
 
-                            @Override
-                            public void onSuccess(@NonNull List<Recipe> recipes) {
-                                Log.d(TAG, "onSuccess() called with: recipes = [" + recipes + "]");
-                            }
+        mActivityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+    }
 
-                            @Override
-                            public void onError(@NonNull Throwable e) {
-                                Log.d(TAG, "onError() called with: e = [" + e + "]");
-                            }
-                        });
+    private ViewModelProvider getRecipesViewModelProvider() {
+        return new ViewModelProvider(
+                this,
+                new ViewModelProvider.Factory() {
+                    @Override
+                    public <T extends ViewModel> T create(
+                            @androidx.annotation.NonNull Class<T> modelClass) {
+                        try {
+                            return modelClass
+                                    .getDeclaredConstructor(RecipeDatabaseService.class)
+                                    .newInstance(mRecipeDatabaseService);
+                        } catch (IllegalAccessException
+                                | InstantiationException
+                                | InvocationTargetException
+                                | NoSuchMethodException e) {
+                            e.printStackTrace();
+                            throw new IllegalArgumentException(
+                                    String.format(
+                                            "Unable to create a RecipesViewModel. See error message => %s",
+                                            e.getMessage()));
+                        }
+                    }
+                });
     }
 }
