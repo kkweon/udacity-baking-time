@@ -39,6 +39,7 @@ public class DetailActivityTest {
     @Rule
     public ActivityTestRule<DetailActivity> mActivityTestRule =
             new ActivityTestRule<>(DetailActivity.class, true, false);
+
     private IdlingResource mIdlingResource;
     private RecipeDatabase mDb;
     private RecipeDao mRecipeDao;

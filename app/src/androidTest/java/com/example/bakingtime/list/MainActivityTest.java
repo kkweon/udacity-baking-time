@@ -28,6 +28,7 @@ public class MainActivityTest {
     @Rule
     public IntentsTestRule<MainActivity> mActivityTestRule =
             new IntentsTestRule<>(MainActivity.class);
+
     private IdlingResource mIdlingResource;
 
     @Before

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -123,6 +124,21 @@ public class DetailStepItemFragment extends Fragment {
                     return null;
                 },
                 fragmentDetailStepItemBinding.imageViewActivityDetailStepItemThumbnail);
+
+        showImageButtonOn(
+                fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev,
+                recipeStep.hasPrev());
+        showImageButtonOn(
+                fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext,
+                recipeStep.hasNext());
+    }
+
+    private void showImageButtonOn(ImageButton imageButton, boolean condition) {
+        if (condition) {
+            imageButton.setVisibility(View.VISIBLE);
+        } else {
+            imageButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void maybeDoSomething(String param, Function<Void, Void> doFn, View view) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,12 +12,14 @@
         android:id="@+id/player_view_activity_detail_step_item"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        app:layout_constraintTop_toTopOf="parent"
         tools:background="@android:drawable/ic_media_play" />
 
     <ImageView
         android:id="@+id/image_view_activity_detail_step_item_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@id/player_view_activity_detail_step_item"
         tools:src="@android:drawable/editbox_background" />
 
     <TextView
@@ -24,7 +27,24 @@
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/image_view_activity_detail_step_item_thumbnail"
         tools:text="Step 1. Do Something" />
 
+    <ImageButton
+        android:id="@+id/image_button_fragment_detail_step_item_prev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_media_previous"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/image_button_fragment_detail_step_item_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_media_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

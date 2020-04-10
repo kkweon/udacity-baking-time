@@ -39,8 +39,8 @@ public class DetailStepListFragment extends Fragment
     public DetailStepListFragment() {}
 
     public DetailStepListFragment(long recipeId, SimpleIdlingResource simpleIdlingResource) {
-       mRecipeId = recipeId;
-       mIdlingResource = simpleIdlingResource;
+        mRecipeId = recipeId;
+        mIdlingResource = simpleIdlingResource;
     }
 
     @Nullable

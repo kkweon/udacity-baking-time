@@ -29,6 +29,7 @@ public class DetailStepItemActivity extends AppCompatActivity {
         if (recipeStep == null) {
             Log.d(TAG, "onCreate: found recipeStep = null");
             finish();
+            return;
         }
 
         activityDetailStepItemBinding = ActivityDetailStepItemBinding.inflate(getLayoutInflater());

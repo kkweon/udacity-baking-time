@@ -45,6 +45,9 @@ public class RecipeStep implements Parcelable {
     @Expose
     private String thumbnailURL;
 
+    @Expose private boolean prev;
+    @Expose private boolean next;
+
     @Ignore
     public RecipeStep(Parcel in) {
         this.id = in.readLong();
@@ -52,6 +55,9 @@ public class RecipeStep implements Parcelable {
         this.description = in.readString();
         this.videoURL = in.readString();
         this.thumbnailURL = in.readString();
+
+        this.prev = readBoolean(in);
+        this.next = readBoolean(in);
     }
 
     @Ignore
@@ -60,12 +66,25 @@ public class RecipeStep implements Parcelable {
             String shortDescription,
             String description,
             String videoURL,
-            String thumbnailURL) {
+            String thumbnailURL,
+            boolean prev,
+            boolean next) {
         this.id = id;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
         this.thumbnailURL = thumbnailURL;
+
+        this.prev = prev;
+        this.next = next;
+    }
+
+    public boolean hasPrev() {
+        return prev;
+    }
+
+    public boolean hasNext() {
+        return next;
     }
 
     /**
@@ -96,5 +115,16 @@ public class RecipeStep implements Parcelable {
         dest.writeString(description);
         dest.writeString(videoURL);
         dest.writeString(thumbnailURL);
+        writeBoolean(dest, prev);
+        writeBoolean(dest, next);
+    }
+
+    private boolean readBoolean(Parcel in) {
+        return in.readByte() == 1;
+    }
+
+    private void writeBoolean(Parcel dest, boolean prev) {
+        if (prev) dest.writeByte((byte) 1);
+        else dest.writeByte((byte) 0);
     }
 }
