@@ -1,24 +1,29 @@
 package com.example.bakingtime.data;
 
 import android.content.Context;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(
     entities = {Recipe.class},
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 @TypeConverters({ListJsonConverter.class})
 public abstract class RecipeDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 2;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    private static final String TAG = RecipeDatabase.class.getSimpleName();
     private static volatile RecipeDatabase INSTANCE;
 
     static RecipeDatabase getDatabase(final Context context) {
@@ -65,9 +70,11 @@ public abstract class RecipeDatabase extends RoomDatabase {
                 RecipeNetworkService_Factory.newInstance(context)
                         .getRecipes()
                         .subscribe(
-                                recipes ->
-                                        databaseWriteExecutor.execute(
-                                                () -> INSTANCE.recipeDao().addRecipes(recipes)));
+                                recipes -> {
+                                    Log.d(TAG, "Recipes got fetched from the network\n" + recipes);
+                                    databaseWriteExecutor.execute(
+                                            () -> INSTANCE.recipeDao().addRecipes(recipes));
+                                });
             }
         };
     }

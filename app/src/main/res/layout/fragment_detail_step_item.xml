@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp"
+    tools:context=".detail.ui.detailsteplist.DetailStepItemFragment">
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/player_view_activity_detail_step_item"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:background="@android:drawable/ic_media_play" />
+
+    <ImageView
+        android:id="@+id/image_view_activity_detail_step_item_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:src="@android:drawable/editbox_background" />
+
+    <TextView
+        android:id="@+id/text_view_activity_detail_step_item_description"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Step 1. Do Something" />
+
+
+</LinearLayout>

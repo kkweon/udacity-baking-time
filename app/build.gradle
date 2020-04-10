@@ -11,7 +11,7 @@ android {
 
 	defaultConfig {
 		applicationId "com.example.bakingtime"
-		minSdkVersion 23
+		minSdkVersion 24
 		targetSdkVersion 29
 		versionCode 1
 		versionName "1.0"
@@ -40,10 +40,24 @@ dependencies {
 	implementation 'androidx.recyclerview:recyclerview:1.1.0'
 	implementation 'androidx.cardview:cardview:1.0.0'
 
+	// Exoplayer
+	implementation 'com.google.android.exoplayer:exoplayer-core:2.10.5'
+	implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.5'
+	implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.5'
+
+
 	implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	testImplementation 'junit:junit:4.13'
-	androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-	androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+	debugImplementation 'androidx.test.ext:junit:1.1.1'
+	debugImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+	debugImplementation 'androidx.test:rules:1.2.0'
+	debugImplementation 'androidx.test:runner:1.2.0'
+	debugImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
+	implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+	def fragment_version = "1.2.4"
+	debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
 
 	implementation 'com.google.dagger:dagger:2.27'
 	annotationProcessor 'com.google.dagger:dagger-compiler:2.27'
