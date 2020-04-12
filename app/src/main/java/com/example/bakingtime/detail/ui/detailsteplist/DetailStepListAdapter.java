@@ -1,6 +1,8 @@
 package com.example.bakingtime.detail.ui.detailsteplist;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bakingtime.data.Recipe;
@@ -22,6 +25,8 @@ class DetailStepListAdapter
         extends RecyclerView.Adapter<DetailStepListAdapter.DetailStepListViewHolder> {
 
     private static final String TAG = DetailStepListAdapter.class.getSimpleName();
+
+    @Setter private Integer mActiveRecipeStepId = null;
     @Setter private OnCardViewClickListener onCardViewClickListener;
     @Setter private Recipe mRecipe;
 
@@ -48,6 +53,8 @@ class DetailStepListAdapter
                         // Step should start from 1.
                         position + 1,
                         recipeStep.getShortDescription()));
+
+        holder.setActive(position == mActiveRecipeStepId);
 
         if (!recipeStep.getThumbnailURL().isEmpty()) {
             Picasso.get()
@@ -96,7 +103,7 @@ class DetailStepListAdapter
     }
 
     interface OnCardViewClickListener {
-        void onClick(RecipeStep recipe);
+        void onClick(RecipeStep recipeStep);
     }
 
     class DetailStepListViewHolder extends RecyclerView.ViewHolder {
@@ -110,6 +117,16 @@ class DetailStepListAdapter
                     v ->
                             onCardViewClickListener.onClick(
                                     mRecipe.getSteps().get(getAdapterPosition())));
+        }
+
+        public void setActive(boolean isActive) {
+            if (isActive) {
+                rowRecipeStepDetailBinding.cardViewRowRecipeStepDetailContainer
+                        .setCardBackgroundColor(Color.argb(50, 50, 100, 100));
+            } else {
+                rowRecipeStepDetailBinding.cardViewRowRecipeStepDetailContainer
+                        .setCardBackgroundColor(Color.TRANSPARENT);
+            }
         }
     }
 }

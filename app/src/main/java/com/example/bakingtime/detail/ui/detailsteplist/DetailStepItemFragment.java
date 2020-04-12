@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.bakingtime.data.RecipeStep;
 import com.example.bakingtime.databinding.FragmentDetailStepItemBinding;
@@ -21,12 +23,27 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 import java.util.function.Function;
 
 import static android.view.View.GONE;
 
-/** A simple {@link Fragment} subclass. */
+/**
+ * A simple {@link Fragment} subclass.
+ */
 public class DetailStepItemFragment extends Fragment {
+
+    private static final String KEY_ON_NAV_CLICK_LISTENER = "KEY_ON_NAV_CLICK_LISTENER";
+
+    public interface OnNavClickListener extends Serializable {
+        void onClickPrev(RecipeStep recipeStep);
+
+        void onClickNext(RecipeStep recipeStep);
+    }
+
+    private OnNavClickListener mOnNavClickListener;
 
     private static final String KEY_RECIPE_STEP_OUT_STATE = "KEY_RECIPE_STEP_OUT_STATE";
     private static final String TAG = DetailStepItemFragment.class.getSimpleName();
@@ -42,16 +59,18 @@ public class DetailStepItemFragment extends Fragment {
     private RecipeStep recipeStep;
     private String userAgent;
 
-    public static DetailStepItemFragment create(RecipeStep recipeStep) {
+    public static DetailStepItemFragment create(RecipeStep recipeStep, @Nullable OnNavClickListener onNavClickListener) {
         // Required empty public constructor
         DetailStepItemFragment fragment = new DetailStepItemFragment();
+
         fragment.recipeStep = recipeStep;
+        fragment.mOnNavClickListener = onNavClickListener;
         return fragment;
     }
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentDetailStepItemBinding =
                 FragmentDetailStepItemBinding.inflate(inflater, container, false);
@@ -62,6 +81,8 @@ public class DetailStepItemFragment extends Fragment {
         if (savedInstanceState != null) {
             recipeStep = savedInstanceState.getParcelable(KEY_RECIPE_STEP_OUT_STATE);
             restoreExoPlayStats(savedInstanceState);
+
+            mOnNavClickListener = (OnNavClickListener) savedInstanceState.getSerializable(KEY_ON_NAV_CLICK_LISTENER);
         }
 
         initializeView(recipeStep);
@@ -90,6 +111,10 @@ public class DetailStepItemFragment extends Fragment {
         outState.putBoolean(KEY_PLAY_WHEN_READY_STATE, playWhenReady);
         outState.putLong(KEY_PLAYBACK_POSITION_STATE, playbackPosition);
         outState.putInt(KEY_CURRENT_WINDOW_STATE, currentWindow);
+
+        if (mOnNavClickListener != null) {
+            outState.putSerializable(KEY_ON_NAV_CLICK_LISTENER, mOnNavClickListener);
+        }
     }
 
     private void restoreExoPlayStats(Bundle savedInstanceState) {
@@ -103,6 +128,7 @@ public class DetailStepItemFragment extends Fragment {
             Log.d(TAG, "initializeView() called with: recipeStep = [" + recipeStep + "]");
             return;
         }
+
         maybeDoSomething(
                 recipeStep.getThumbnailURL(),
                 aVoid -> {
@@ -123,17 +149,28 @@ public class DetailStepItemFragment extends Fragment {
                             recipeStep.getDescription());
                     return null;
                 },
-                fragmentDetailStepItemBinding.imageViewActivityDetailStepItemThumbnail);
+                fragmentDetailStepItemBinding.textViewActivityDetailStepItemDescription);
 
         showImageButtonOn(
                 fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev,
                 recipeStep.hasPrev());
+        if (recipeStep.hasPrev() && mOnNavClickListener != null && fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev != null) {
+            fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev.setOnClickListener(v -> mOnNavClickListener.onClickPrev(recipeStep));
+        }
+
         showImageButtonOn(
                 fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext,
                 recipeStep.hasNext());
+        if (recipeStep.hasNext() && mOnNavClickListener != null && fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext != null) {
+            fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext.setOnClickListener(v -> mOnNavClickListener.onClickNext(recipeStep));
+        }
     }
 
     private void showImageButtonOn(ImageButton imageButton, boolean condition) {
+        // Do nothing if imageButton is null. It means the current layout is a landscape mode.
+        if (imageButton == null) {
+            return;
+        }
         if (condition) {
             imageButton.setVisibility(View.VISIBLE);
         } else {
@@ -142,6 +179,11 @@ public class DetailStepItemFragment extends Fragment {
     }
 
     private void maybeDoSomething(String param, Function<Void, Void> doFn, View view) {
+        // do nothing if view is hidden (For example, the layout is a landscape mode).
+        if (view == null) {
+            return;
+        }
+
         if (!param.isEmpty()) {
             doFn.apply(null);
         } else {
@@ -150,7 +192,7 @@ public class DetailStepItemFragment extends Fragment {
     }
 
     private void initializePlayer() {
-        if (recipeStep.getVideoURL().isEmpty()) {
+        if (recipeStep == null || recipeStep.getVideoURL().isEmpty()) {
             fragmentDetailStepItemBinding.playerViewActivityDetailStepItem.setVisibility(GONE);
             return;
         }
@@ -160,6 +202,11 @@ public class DetailStepItemFragment extends Fragment {
         exoPlayer.setPlayWhenReady(playWhenReady);
         exoPlayer.seekTo(currentWindow, playbackPosition);
         exoPlayer.prepare(mediaSource, false, false);
+
+        // if landscape hide description
+        if (fragmentDetailStepItemBinding.frameLayoutFragmentDetailStepItemLandscape != null) {
+            fragmentDetailStepItemBinding.textViewActivityDetailStepItemDescription.setVisibility(GONE);
+        }
     }
 
     private MediaSource buildMediaSource(Uri uri) {

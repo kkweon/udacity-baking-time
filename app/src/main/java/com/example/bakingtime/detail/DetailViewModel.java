@@ -1,19 +1,34 @@
 package com.example.bakingtime.detail;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+
 import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeDatabaseService;
+import com.example.bakingtime.data.RecipeStep;
 
 public class DetailViewModel extends ViewModel {
 
     private RecipeDatabaseService recipeDatabaseService;
 
+    // Selected Recipe Step
+    private MutableLiveData<Integer> mSelectedRecipeStepId = new MutableLiveData<>(0);
+
     public DetailViewModel(RecipeDatabaseService recipeDatabaseService) {
         this.recipeDatabaseService = recipeDatabaseService;
     }
 
-    public LiveData<Recipe> geRecipe(long recipeId) {
+    public LiveData<Recipe> getRecipeById(long recipeId) {
         return recipeDatabaseService.getRecipeById(recipeId);
+    }
+
+    public LiveData<Integer> getSelectedRecipeStepId() {
+        return mSelectedRecipeStepId;
+    }
+
+    public void setSelectedRecipeStepId(int i) {
+        mSelectedRecipeStepId.setValue(i);
     }
 }

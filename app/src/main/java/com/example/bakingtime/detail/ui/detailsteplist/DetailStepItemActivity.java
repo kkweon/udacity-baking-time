@@ -12,10 +12,13 @@ import androidx.fragment.app.FragmentManager;
 import com.example.bakingtime.data.RecipeStep;
 import com.example.bakingtime.databinding.ActivityDetailStepItemBinding;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
-public class DetailStepItemActivity extends AppCompatActivity {
+public class DetailStepItemActivity extends AppCompatActivity implements DetailStepItemFragment.OnNavClickListener {
     public static final String EXTRA_RECIPE_STEP = "EXTRA_RECIPE_STEP";
+    public static final String EXTRA_NAV_BUTTON_CLICKED = "EXTRA_NAV_BUTTON_CLICKED";
     private static final String TAG = DetailStepItemActivity.class.getSimpleName();
     private ActivityDetailStepItemBinding activityDetailStepItemBinding;
 
@@ -38,7 +41,7 @@ public class DetailStepItemActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
 
             FragmentManager supportFragmentManager = getSupportFragmentManager();
-            Fragment fragment = DetailStepItemFragment.create(recipeStep);
+            Fragment fragment = DetailStepItemFragment.create(recipeStep, this);
             supportFragmentManager
                     .beginTransaction()
                     .add(
@@ -49,5 +52,27 @@ public class DetailStepItemActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setTitle(recipeStep.getShortDescription());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onClickPrev(RecipeStep recipeStep) {
+        Intent intent = getNextStateIntent(recipeStep, ExtraNavButtonClickEvent.PREV_BUTTON_CLICKED);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void onClickNext(RecipeStep recipeStep) {
+        Intent intent = getNextStateIntent(recipeStep, ExtraNavButtonClickEvent.NEXT_BUTTON_CLICKED);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @NotNull
+    private Intent getNextStateIntent(RecipeStep recipeStep, ExtraNavButtonClickEvent nextButtonClicked) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_NAV_BUTTON_CLICKED, nextButtonClicked);
+        intent.putExtra(EXTRA_RECIPE_STEP, recipeStep);
+        return intent;
     }
 }

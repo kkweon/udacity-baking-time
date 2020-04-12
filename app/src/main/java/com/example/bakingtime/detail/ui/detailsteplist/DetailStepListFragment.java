@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bakingtime.R;
 import com.example.bakingtime.SimpleIdlingResource;
 import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeStep;
@@ -23,11 +24,14 @@ import com.example.bakingtime.detail.DetailViewModel;
 
 import lombok.Setter;
 
+import static android.app.Activity.RESULT_OK;
+
 public class DetailStepListFragment extends Fragment
         implements Observer<Recipe>, DetailStepListAdapter.OnCardViewClickListener {
 
     private static final String KEY_RECIPE_ID = "KEY_RECIPE_ID";
     private static final String TAG = DetailStepListFragment.class.getSimpleName();
+    private static final int REQUEST_CODE_START_DETAIL_STEP_ITEM_ACTIVITY = 0b11101101;
 
     @Setter private long mRecipeId;
     private DetailViewModel mViewModel;
@@ -35,6 +39,8 @@ public class DetailStepListFragment extends Fragment
     private long INVALID_RECIPE_ID = -1;
     private DetailStepListAdapter mAdapter = new DetailStepListAdapter();
     private SimpleIdlingResource mIdlingResource;
+
+    @Nullable private Recipe mRecipe;
 
     public DetailStepListFragment() {}
 
@@ -75,7 +81,15 @@ public class DetailStepListFragment extends Fragment
         if (mIdlingResource != null) {
             mIdlingResource.setIdleState(false);
         }
-        mViewModel.geRecipe(mRecipeId).observe(getViewLifecycleOwner(), this);
+        mViewModel.getRecipeById(mRecipeId).observe(getViewLifecycleOwner(), this);
+        mViewModel
+                .getSelectedRecipeStepId()
+                .observe(
+                        getViewLifecycleOwner(),
+                        recipeStepId -> {
+                            mAdapter.setMActiveRecipeStepId(recipeStepId);
+                            mAdapter.notifyDataSetChanged();
+                        });
 
         RecyclerView container = mDetailStepListFragmentBinding.recyclerViewRecipeStepsContainer;
         container.setAdapter(mAdapter);
@@ -91,6 +105,7 @@ public class DetailStepListFragment extends Fragment
      */
     @Override
     public void onChanged(Recipe recipe) {
+        mRecipe = recipe;
         mAdapter.setMRecipe(recipe);
         mDetailStepListFragmentBinding.recyclerViewRecipeStepsContainer.setHasFixedSize(true);
         mAdapter.notifyDataSetChanged();
@@ -108,9 +123,62 @@ public class DetailStepListFragment extends Fragment
 
     @Override
     public void onClick(RecipeStep recipeStep) {
+        if (isTablet()) {
+            if (mRecipe != null) {
+                mViewModel.setSelectedRecipeStepId(mRecipe.getSteps().indexOf(recipeStep));
+            }
+            return;
+        }
         // if it's a phone, start a new activity
+        startDetailStepItemActivityForResult(recipeStep);
+    }
+
+    private boolean isTablet() {
+        View view = requireActivity().findViewById(R.id.activity_detail_step_list_container);
+        return view.getTag().equals(getString(R.string.device_tablet));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (requestCode == REQUEST_CODE_START_DETAIL_STEP_ITEM_ACTIVITY
+                && resultCode == RESULT_OK) {
+            ExtraNavButtonClickEvent buttonClickEvent =
+                    (ExtraNavButtonClickEvent)
+                            data.getSerializableExtra(
+                                    DetailStepItemActivity.EXTRA_NAV_BUTTON_CLICKED);
+            RecipeStep recipeStep =
+                    data.getParcelableExtra(DetailStepItemActivity.EXTRA_RECIPE_STEP);
+
+            if (mRecipe == null) {
+                return;
+            }
+
+            int i = mRecipe.getSteps().indexOf(recipeStep);
+            switch (buttonClickEvent) {
+                case PREV_BUTTON_CLICKED:
+                    if (0 < i) {
+                        RecipeStep prevRecipeStep = mRecipe.getSteps().get(i - 1);
+                        startDetailStepItemActivityForResult(prevRecipeStep);
+                        return;
+                    }
+                    break;
+                case NEXT_BUTTON_CLICKED:
+                    if (i + 1 < mRecipe.getSteps().size()) {
+                        RecipeStep nextRecipeStep = mRecipe.getSteps().get(i + 1);
+                        startDetailStepItemActivityForResult(nextRecipeStep);
+                        return;
+                    }
+                    break;
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void startDetailStepItemActivityForResult(RecipeStep recipeStep) {
         Intent intent = new Intent(getContext(), DetailStepItemActivity.class);
         intent.putExtra(DetailStepItemActivity.EXTRA_RECIPE_STEP, recipeStep);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_START_DETAIL_STEP_ITEM_ACTIVITY);
     }
 }
