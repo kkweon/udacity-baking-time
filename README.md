@@ -4,7 +4,7 @@
 <tr>
 <td><img src="./assets/widget.png"></td>
 <td><img src="./assets/master_view.png"></td>
-<td><img src="./assets/detail-view.png"></td>
+<td><img src="./assets/detail_view.png"></td>
 </tr>
 
 <tr>
