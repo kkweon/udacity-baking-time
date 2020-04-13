@@ -1,12 +1,13 @@
 package com.example.bakingtime.detail.ui.detailsteplist;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,17 +15,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.bakingtime.R;
 import com.example.bakingtime.SimpleIdlingResource;
 import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeStep;
 import com.example.bakingtime.databinding.FragmentDetailStepListBinding;
 import com.example.bakingtime.detail.DetailViewModel;
-
 import lombok.Setter;
-
-import static android.app.Activity.RESULT_OK;
 
 public class DetailStepListFragment extends Fragment
         implements Observer<Recipe>, DetailStepListAdapter.OnCardViewClickListener {

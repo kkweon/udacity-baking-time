@@ -19,4 +19,3 @@ This is an Android application to show Recipes.
 ## Getting Started
 
 1. Open the project in AndroidStudio to build.
-

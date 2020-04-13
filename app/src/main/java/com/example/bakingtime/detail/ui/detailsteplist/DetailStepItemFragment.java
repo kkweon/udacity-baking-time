@@ -1,5 +1,7 @@
 package com.example.bakingtime.detail.ui.detailsteplist;
 
+import static android.view.View.GONE;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,12 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.example.bakingtime.data.RecipeStep;
 import com.example.bakingtime.databinding.FragmentDetailStepItemBinding;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -22,17 +21,11 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.squareup.picasso.Picasso;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.function.Function;
+import org.jetbrains.annotations.NotNull;
 
-import static android.view.View.GONE;
-
-/**
- * A simple {@link Fragment} subclass.
- */
+/** A simple {@link Fragment} subclass. */
 public class DetailStepItemFragment extends Fragment {
 
     private static final String KEY_ON_NAV_CLICK_LISTENER = "KEY_ON_NAV_CLICK_LISTENER";
@@ -59,7 +52,8 @@ public class DetailStepItemFragment extends Fragment {
     private RecipeStep recipeStep;
     private String userAgent;
 
-    public static DetailStepItemFragment create(RecipeStep recipeStep, @Nullable OnNavClickListener onNavClickListener) {
+    public static DetailStepItemFragment create(
+            RecipeStep recipeStep, @Nullable OnNavClickListener onNavClickListener) {
         // Required empty public constructor
         DetailStepItemFragment fragment = new DetailStepItemFragment();
 
@@ -82,7 +76,9 @@ public class DetailStepItemFragment extends Fragment {
             recipeStep = savedInstanceState.getParcelable(KEY_RECIPE_STEP_OUT_STATE);
             restoreExoPlayStats(savedInstanceState);
 
-            mOnNavClickListener = (OnNavClickListener) savedInstanceState.getSerializable(KEY_ON_NAV_CLICK_LISTENER);
+            mOnNavClickListener =
+                    (OnNavClickListener)
+                            savedInstanceState.getSerializable(KEY_ON_NAV_CLICK_LISTENER);
         }
 
         initializeView(recipeStep);
@@ -154,15 +150,21 @@ public class DetailStepItemFragment extends Fragment {
         showImageButtonOn(
                 fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev,
                 recipeStep.hasPrev());
-        if (recipeStep.hasPrev() && mOnNavClickListener != null && fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev != null) {
-            fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev.setOnClickListener(v -> mOnNavClickListener.onClickPrev(recipeStep));
+        if (recipeStep.hasPrev()
+                && mOnNavClickListener != null
+                && fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev != null) {
+            fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemPrev.setOnClickListener(
+                    v -> mOnNavClickListener.onClickPrev(recipeStep));
         }
 
         showImageButtonOn(
                 fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext,
                 recipeStep.hasNext());
-        if (recipeStep.hasNext() && mOnNavClickListener != null && fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext != null) {
-            fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext.setOnClickListener(v -> mOnNavClickListener.onClickNext(recipeStep));
+        if (recipeStep.hasNext()
+                && mOnNavClickListener != null
+                && fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext != null) {
+            fragmentDetailStepItemBinding.imageButtonFragmentDetailStepItemNext.setOnClickListener(
+                    v -> mOnNavClickListener.onClickNext(recipeStep));
         }
     }
 
@@ -205,7 +207,8 @@ public class DetailStepItemFragment extends Fragment {
 
         // if landscape hide description
         if (fragmentDetailStepItemBinding.frameLayoutFragmentDetailStepItemLandscape != null) {
-            fragmentDetailStepItemBinding.textViewActivityDetailStepItemDescription.setVisibility(GONE);
+            fragmentDetailStepItemBinding.textViewActivityDetailStepItemDescription.setVisibility(
+                    GONE);
         }
     }
 

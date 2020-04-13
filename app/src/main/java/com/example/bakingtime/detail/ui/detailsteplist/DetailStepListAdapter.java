@@ -1,6 +1,5 @@
 package com.example.bakingtime.detail.ui.detailsteplist;
 
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,17 +7,13 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
-import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeStep;
 import com.example.bakingtime.databinding.RowRecipeStepDetailBinding;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-
 import lombok.Setter;
 
 class DetailStepListAdapter

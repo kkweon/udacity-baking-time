@@ -3,28 +3,22 @@ package com.example.bakingtime.detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.test.espresso.IdlingResource;
-
 import com.example.bakingtime.BakingTimeApplication;
 import com.example.bakingtime.SimpleIdlingResource;
-import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeDatabaseService;
 import com.example.bakingtime.data.RecipeStep;
 import com.example.bakingtime.databinding.ActivityDetailBinding;
 import com.example.bakingtime.detail.ui.detailsteplist.DetailStepItemFragment;
 import com.example.bakingtime.detail.ui.detailsteplist.DetailStepListFragment;
-
 import javax.inject.Inject;
-
 import lombok.SneakyThrows;
 
 public class DetailActivity extends AppCompatActivity {
@@ -34,8 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static SimpleIdlingResource mIdlingResource;
 
-    @Inject
-    RecipeDatabaseService recipeDatabaseService;
+    @Inject RecipeDatabaseService recipeDatabaseService;
     private DetailViewModel mDetailViewModel;
     private ActivityDetailBinding mDetailActivityBinding;
 
@@ -62,18 +55,18 @@ public class DetailActivity extends AppCompatActivity {
 
         mDetailViewModel =
                 new ViewModelProvider(
-                        this,
-                        new ViewModelProvider.Factory() {
-                            @SneakyThrows
-                            @NonNull
-                            @Override
-                            public <T extends ViewModel> T create(
-                                    @NonNull Class<T> modelClass) {
-                                return modelClass
-                                        .getDeclaredConstructor(RecipeDatabaseService.class)
-                                        .newInstance(recipeDatabaseService);
-                            }
-                        })
+                                this,
+                                new ViewModelProvider.Factory() {
+                                    @SneakyThrows
+                                    @NonNull
+                                    @Override
+                                    public <T extends ViewModel> T create(
+                                            @NonNull Class<T> modelClass) {
+                                        return modelClass
+                                                .getDeclaredConstructor(RecipeDatabaseService.class)
+                                                .newInstance(recipeDatabaseService);
+                                    }
+                                })
                         .get(DetailViewModel.class);
 
         Intent intent = getIntent();
@@ -84,34 +77,40 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-
         if (isTabletMode()) {
-            Transformations.switchMap(mDetailViewModel.getSelectedRecipeStepId(), integer -> Transformations.map(
-                    mDetailViewModel.getRecipeById(recipeId),
-                    recipe -> recipe.getSteps().get(integer)
-            )).observe(this, recipeStep -> {
-
-                        DetailStepItemFragment stepItemFragment = DetailStepItemFragment.create(recipeStep, null);
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(mDetailActivityBinding.activityDetailStepItemContainer.getId(),
-                                        stepItemFragment
-                                ).commit();
-                    }
-            );
+            Transformations.switchMap(
+                            mDetailViewModel.getSelectedRecipeStepId(),
+                            integer ->
+                                    Transformations.map(
+                                            mDetailViewModel.getRecipeById(recipeId),
+                                            recipe -> recipe.getSteps().get(integer)))
+                    .observe(
+                            this,
+                            recipeStep -> {
+                                DetailStepItemFragment stepItemFragment =
+                                        DetailStepItemFragment.create(recipeStep, null);
+                                getSupportFragmentManager()
+                                        .beginTransaction()
+                                        .replace(
+                                                mDetailActivityBinding
+                                                        .activityDetailStepItemContainer.getId(),
+                                                stepItemFragment)
+                                        .commit();
+                            });
         }
-
 
         if (savedInstanceState == null) {
 
             Log.d(TAG, "onCreate: creating a new fragment");
             DetailStepListFragment fragment = new DetailStepListFragment(recipeId, mIdlingResource);
 
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(mDetailActivityBinding.activityDetailStepListContainer.getId(), fragment);
-            fragmentTransaction
-                    .commitNow();
+            FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(
+                                    mDetailActivityBinding.activityDetailStepListContainer.getId(),
+                                    fragment);
+            fragmentTransaction.commitNow();
         }
     }
 

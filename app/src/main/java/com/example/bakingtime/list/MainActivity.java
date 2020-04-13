@@ -5,8 +5,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -16,7 +14,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.test.espresso.IdlingResource;
-
 import com.example.bakingtime.BakingTimeApplication;
 import com.example.bakingtime.IngredientsWidget;
 import com.example.bakingtime.SimpleIdlingResource;
@@ -24,16 +21,10 @@ import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeDatabaseService;
 import com.example.bakingtime.databinding.ActivityMainBinding;
 import com.example.bakingtime.detail.DetailActivity;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity
@@ -105,14 +96,14 @@ public class MainActivity extends AppCompatActivity
                         recipe.getName())
                 .putString(
                         BakingTimeApplication.SHARED_PREFERENCES_SELECTED_INGREDIENTS,
-                        recipe.getIngredients().stream()
+                        recipe.getIngredients()
+                                .stream()
                                 .map(
                                         ing ->
                                                 String.format(
                                                         Locale.getDefault(),
                                                         "%d %s %s",
                                                         (int) ing.getQuantity(),
-
                                                         ing.getMeasure(),
                                                         ing.getIngredient()))
                                 .collect(Collectors.joining("\n")))

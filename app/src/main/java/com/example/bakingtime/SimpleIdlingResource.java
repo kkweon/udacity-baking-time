@@ -1,9 +1,7 @@
 package com.example.bakingtime;
 
 import androidx.test.espresso.IdlingResource;
-
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.annotation.Nullable;
 
 public class SimpleIdlingResource implements IdlingResource {

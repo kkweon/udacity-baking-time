@@ -2,12 +2,9 @@ package com.example.bakingtime.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.room.Ignore;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import lombok.Builder;
 import lombok.Data;
 

@@ -2,12 +2,9 @@ package com.example.bakingtime.detail;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
-
 import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeDatabaseService;
-import com.example.bakingtime.data.RecipeStep;
 
 public class DetailViewModel extends ViewModel {
 

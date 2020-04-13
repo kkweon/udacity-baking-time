@@ -1,36 +1,32 @@
 package com.example.bakingtime.detail;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static com.example.bakingtime.detail.DetailActivity.EXTRA_RECIPE_ID;
+
 import android.content.Context;
 import android.content.Intent;
-
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-
 import com.example.bakingtime.R;
 import com.example.bakingtime.data.Recipe;
 import com.example.bakingtime.data.RecipeDao;
 import com.example.bakingtime.data.RecipeDatabase;
 import com.example.bakingtime.data.RecipeStep;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static com.example.bakingtime.detail.DetailActivity.EXTRA_RECIPE_ID;
 
 @RunWith(AndroidJUnit4.class)
 @Ignore

@@ -2,25 +2,20 @@ package com.example.bakingtime.data;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.SingleEmitter;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Fetch recipes from network.
